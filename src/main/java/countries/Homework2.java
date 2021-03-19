@@ -24,16 +24,19 @@ public class Homework2 {
      * Returns the longest country name translation.
      */
     public Optional<String> streamPipeline1() {
-        // TODO
-        return null;
+        return countries.stream()
+                .flatMap(c -> c.getTranslations().values().stream())
+                .max(Comparator.comparing(c -> c.length()));
     }
 
     /**
      * Returns the longest Italian (i.e., {@code "it"}) country name translation.
      */
     public Optional<String> streamPipeline2() {
-        // TODO
-        return null;
+        return countries.stream()
+                .filter(c -> c.getTranslations().get("it") != null)
+                .map(c -> c.getTranslations().get("it"))
+                .max(Comparator.comparing(c -> c.length()));
     }
 
     /**
@@ -47,15 +50,18 @@ public class Homework2 {
      * Prints single word country names (i.e., country names that do not contain any space characters).
      */
     public void streamPipeline4() {
-        // TODO
+        countries.stream()
+                .filter(c -> !c.getName().contains(" "))
+                .map(c -> c.getName()).forEach(System.out::println);
     }
 
     /**
      * Returns the country name with the most number of words.
      */
     public Optional<String> streamPipeline5() {
-        // TODO
-        return null;
+        return countries.stream()
+                .map(c -> c.getName())
+                .max(Comparator.comparingInt(c -> c.split(" ").length));
     }
 
     /**
