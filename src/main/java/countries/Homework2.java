@@ -92,8 +92,7 @@ public class Homework2 {
     public Optional<String> streamPipeline8() {
         return countries.stream()
                 .map(c -> c.getCapital())
-                .max(Comparator.comparing(c -> vowelCount(c.toLowerCase()))); // A feladat nem kérte külön a toLowerCase
-        // ()-t.
+                .max(Comparator.comparing(c -> vowelCount(c.toLowerCase())));
     }
 
     /**
@@ -119,40 +118,49 @@ public class Homework2 {
      * Returns the number of country names by region that starts with their two-letter country code ignoring case.
      */
     public Map<Region, Long> streamPipeline11() {
-        // TODO
-        return null;
+        return countries.stream()
+                .filter(c -> c.getName().toLowerCase().substring(0,2).equals(c.getCode().toLowerCase()))
+                .collect(groupingBy(c -> c.getRegion(), counting()));
     }
 
     /**
      * Returns a map that contains the number of countries whose population is greater or equal than the population average versus the the number of number of countries with population below the average.
      */
     public Map<Boolean, Long> streamPipeline12() {
-        // TODO
-        return null;
+        return countries.stream()
+                .collect(partitioningBy(c -> c.getPopulation() >=
+                        countries.stream().mapToDouble(country -> country.getPopulation()).summaryStatistics().getAverage(), counting()));
     }
 
     /**
      * Returns a map that contains for each country code the name of the corresponding country in Portuguese ({@code "pt"}).
      */
     public Map<String, String> streamPipeline13() {
-        // TODO
-        return null;
+        return countries.stream()
+                .collect(toMap(c1 -> c1.getCode(), c2 -> c2.getTranslations().get("pt")));
     }
 
     /**
      * Returns the list of capitals by region whose name is the same is the same as the name of their country.
      */
     public Map<Region, List<String>> streamPipeline14() {
-        // TODO
-        return null;
+        return countries.stream()
+                .collect(groupingBy(c1 -> c1.getRegion(),
+                            filtering(c2 -> c2.getName().equals(c2.getCapital()),
+                                mapping(c3 -> c3.getCapital(), toList() ))));
+
+      /*        countries.stream()
+                .filter(c -> c.getName().equals(c.getCapital()))
+                .collect(groupingBy(c1 -> c1.getRegion(), mapping(c2 -> c2.getCapital(), toList()))); */
     }
 
     /**
      *  Returns a map of country name-population density pairs.
      */
-    public Map<Region, Double> streamPipeline15() {
-        // TODO
-        return null;
+    public Map<String, Double> streamPipeline15() {
+        return countries.stream()
+                .collect(toMap(c1 -> c1.getName(), c2 -> c2.getArea() == null ? Double.NaN :
+                        c2.getPopulation() / c2.getArea().doubleValue()));
     }
 
 }
