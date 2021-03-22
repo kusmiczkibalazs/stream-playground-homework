@@ -12,6 +12,8 @@ import static java.util.stream.Collectors.*;
 
 import java.time.ZoneId;
 
+import static countries.MyMethods.*;
+
 public class Homework2 {
 
     private List<Country> countries;
@@ -52,7 +54,8 @@ public class Homework2 {
     public void streamPipeline4() {
         countries.stream()
                 .filter(c -> !c.getName().contains(" "))
-                .map(c -> c.getName()).forEach(System.out::println);
+                .map(c -> c.getName())
+                .forEach(System.out::println);
     }
 
     /**
@@ -68,40 +71,48 @@ public class Homework2 {
      * Returns whether there exists at least one capital that is a palindrome.
      */
     public boolean streamPipeline6() {
-        // TODO
-        return false;
+        return countries.stream()
+                .map(c -> c.getCapital())
+                .filter(c -> !c.equals(""))
+                .anyMatch(c -> c.toLowerCase().equals(new StringBuilder(c.toLowerCase()).reverse().toString()));
     }
 
     /**
      * Returns the country name with the most number of {@code 'e'} characters ignoring case.
      */
     public Optional<String> streamPipeline7() {
-        // TODO
-        return null;
+        return countries.stream()
+                .map(c -> c.getName())
+                .max(Comparator.comparing(c -> charCount(c.toLowerCase(),'e')));
     }
 
     /**
      *  Returns the capital with the most number of English vowels (i.e., {@code 'a'}, {@code 'e'}, {@code 'i'}, {@code 'o'}, {@code 'u'}).
      */
     public Optional<String> streamPipeline8() {
-        // TODO
-        return null;
+        return countries.stream()
+                .map(c -> c.getCapital())
+                .max(Comparator.comparing(c -> vowelCount(c.toLowerCase()))); // A feladat nem kérte külön a toLowerCase
+        // ()-t.
     }
 
     /**
      * Returns a map that contains for each character the number of occurrences in country names ignoring case.
      */
     public Map<Character, Long> streamPipeline9() {
-        // TODO
-        return null;
+        return countries.stream()
+                .map(c -> c.getName())
+                .flatMap(c -> c.toLowerCase().chars().mapToObj(i -> (char) i))
+                .collect(groupingBy(c -> c, counting()));
     }
 
     /**
      * Returns a map that contains the number of countries for each possible timezone.
      */
     public Map<ZoneId, Long> streamPipeline10() {
-        // TODO
-        return null;
+        return countries.stream()
+                .flatMap(c -> c.getTimezones().stream())
+                .collect(groupingBy(c -> c, counting()));
     }
 
     /**
